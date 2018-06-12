@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>打地鼠小游戏</title>
+	<script src="js/jQuery.js"></script>
+</head>
+<body>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+		-webkit-user-select: none;
+	}
+	.mous{
+		width: 800px;
+		margin: 0 auto;
+		position:relative;
+	}
+	.title,.start{
+		height: 60px;
+		line-height: 60px;
+		color: white;
+		background-color: #7cd3b1;
+		border: 2px solid #60a58a;
+		border-top: none;
+	}
+	.start{
+		text-align: center;
+		cursor: pointer;
+	}
+	.title .left{
+		float: left;
+		margin-left: 40px;
+	}
+	.title .left .time,.right .num{
+		display: inline-block;
+		width:20px;
+		height:20px;
+		text-align: center;
+		color:red;
+	}
+	.title .right{
+		float: right;
+		margin-right: 40px;
+	}
+	.title .levels{
+		margin-left: 30px;
+	}
+	select{
+		outline: none;
+	}
+	.content{
+		width:auto;
+		height:640px;
+	}
+	.mouse{
+		width:20%;
+		float:left;
+	}
+	.zz{
+		width:100%;
+		height:100%;
+		position:absolute;
+		top:0;left:0;
+		background-color:rgba(0,0,0,0.5);
+		display: none;
+	}
+	.zz .over{
+		width:40%;height:20%;
+		border-radius:10px;
+		box-shadow: 1px 1px 0 3px tan;
+		margin:300px auto;
+		background-color:#fff;
+		overflow: hidden;
+	}
+	.zz .over p{
+		height: 28px;
+		width:150px;
+		font-size:20px;line-height: 25px;text-align: center;
+		font-weight:600;
+		margin:0 auto;margin-top:16px;
+		font-family: "微软雅黑";
+	}
+	 .score{
+		color:red;
+	}
+	button{
+		display: block;
+		height: 28px;
+		width:150px;
+		font-size:20px;line-height: 25px;text-align: center;
+		font-weight:600;color:#fff;
+		margin:0 auto;margin-top: 16px;
+		font-family: "微软雅黑";
+		border-radius:15px;
+		background-color:#000;
+		outline: none;cursor:pointer;border:none;
+	}
+	button:hover{
+		background-color:red;
+		color:#000;
+	}
+	.start:hover{
+		color:red;
+	}
+</style>	
+	<div class="mous">
+			<div class="zz">
+				<div class="over">
+					<p>GAME OVER!</p>
+					<p class="score">得分：<span>5</span>个</p>
+					<button onclick="showMouse()">从新开始</button>
+				</div>
+			</div>
+		<div class="title">
+			<div class="left">
+				<span class="time">60</span>秒
+				<span class="levels">
+					难易程度
+					<select id="level">
+						<option value="500">困难</option>
+						<option value="800">一般</option>
+						<option value="2000" selected="selected">容易</option>
+					</select>
+				</span>
+			</div>
+			<div class="right">
+				打中<span class="num">0</span>个
+			</div>
+		</div>
+		<div class="content">
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+			<img src="img/mouse.jpg" class="mouse" name="mouse" onclick="clickMouse(this)" />
+		</div>
+		<div class="start" onclick="showMouse()">开始游戏</div>
+	</div>
+	<script>
+		var times=document.querySelector(".time");  //s获取游戏时间
+		var start=document.querySelector(".start");   //获取开始按钮
+		var nums=document.querySelector(".num");   //获取得分数
+		var mouses=document.querySelectorAll(".mouse");  //获取地鼠
+		var zz=document.querySelector(".zz");    //获取结束后的界面
+		var score=document.querySelector(".zz .score span");  //获取最终得分
+		var img1="img/mouse.jpg",img2="img/mouse2.jpg",img3="img/mouse3.jpg"; //定义三个图片地址
+		var time=60,num=0;  //定义初始时间和得分
+		var t,t1;  //定义地鼠出现和消失的定时器
+		function showMouse(){  //开始游戏，地鼠出现函数
+			zz.style.display="none";
+			clear();
+			var level=document.getElementById("level").value;  //获取游戏等级
+			t=setInterval(function(){ 
+				time--;
+				times.innerHTML=time;
+				if(time==0){
+					clearInterval(t);
+					clearInterval(t1);
+					zz.style.display="block";
+					score.innerHTML=num;
+				}
+				let numbers=parseInt(Math.random()*mouses.length);  //定义一个0到地鼠长度减一的随机整数
+				mouses[numbers].src=img2; //随机变化某个地鼠的图片地址为出现地鼠的图片
+				t1=setTimeout(function(){
+					mouses[numbers].src=img1;  //地鼠消失
+				},level)
+			},1000)
+		}
+		function clickMouse(e){ //地鼠点击事件函数，传入当前点击的地鼠
+			if(e.src.indexOf("mouse2")!=-1){
+				e.src=img3;
+				num++;
+				nums.innerHTML=num;
+			}
+		}
+		function clear(){  //重置函数
+			time=60;
+			times.innerHTML=time;
+			num=0;
+			nums.innerHTML=num;
+			mouses.forEach((item,index)=>{
+				item.src=img1;
+			})
+			clearInterval(t);
+			clearInterval(t1);
+		}
+	</script>
+</body>
+</html>
